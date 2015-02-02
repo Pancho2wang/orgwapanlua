@@ -42,7 +42,7 @@ local function Uninit(self)
 	local uninit_list = {}
 	local base_class = self.super
 	while base_class do
-		if type(base_class) == "function" or (base_class and base_class.__ctype == 1) then
+		if type(base_class) ~= "table" --[[or (base_class and base_class.__ctype == 1)]] then
 			print("Super is not a class.")
 			break
 		end
@@ -53,7 +53,7 @@ local function Uninit(self)
 		base_class = base_class.super
 	end
 	if is_debug == 1 then
-		print("------------------------ Uninit Begin ------------------------------")
+		print("---------------------- Uninit Begin ----------------------------")
 	end
 	for i = 1, #uninit_list do
 		local func, name = unpack(uninit_list[i])
@@ -63,26 +63,12 @@ local function Uninit(self)
 		assert(func(self) == 1)
 	end
 	if is_debug == 1 then
-		print("------------------------- Uninit End -----------------------------")
+		print("----------------------- Uninit End ---------------------------")
 	end
 	return 1
 end
 
 function wp_class(classname, super)
-	-- local cls = class(classname, super)
-	-- function cls.extend(target)
-	-- 	if not target then
-	-- 		return
-	-- 	end
-	-- 	local t = tolua.getpeer(target)
-	-- 	if not t then
-	-- 		t = {}
-	-- 		tolua.setpeer(target, t)
-	-- 	end
-	-- 	setmetatable(t, cls)
-	-- 	-- target.class = cls
-	-- 	return target
-	-- end
 	local superType = type(super)
     local cls
 
@@ -112,8 +98,9 @@ function wp_class(classname, super)
             local instance = cls.__create(...)
             -- copy fields from class to native object
             for k,v in pairs(cls) do instance[k] = v end
-            instance.class = cls
-            instance:ctor(...)
+            -- instance.class = cls
+            instance.super = cls
+            -- instance:ctor(...)
             return instance
         end
 
@@ -145,8 +132,6 @@ function wp_class(classname, super)
 			end
 		}
         setmetatable(cls, metatb)
-        cls.Init = Init
-		cls.Uninit = Uninit
         function cls.new(...)
             local instance = setmetatable({}, {__index = cls})
             -- local instance = setmetatable({}, {__index = cls})
@@ -160,6 +145,23 @@ function wp_class(classname, super)
             return instance
         end
     end
+    cls.Init = Init
+	cls.Uninit = Uninit
+
+	function cls.extend(target)
+		if not target then
+			return
+		end
+		local t = tolua.getpeer(target)
+		if not t then
+			t = {}
+			tolua.setpeer(target, t)
+		end
+		setmetatable(t, {__index = cls})
+		-- target.class = cls
+		target.super = cls
+		return target
+	end
 
 	return cls
 end

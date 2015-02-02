@@ -67,8 +67,10 @@ local function main()
     
     -- local scene = ClassMgr:GetClassByName("LoadScene")
     -- local sceneGame = scene.create()
-
-    local sceneGame = scene_pool:AddObject("LoadScene")
+    -- sceneGame:ctor()
+    -- local sceneGame = scene_pool:AddObject("LoadScene")
+    -- local scene = cc.Scene:create()
+    local sceneGame = scene_pool:AddCCObject("LoadScene", cc.Scene:create())
 	if cc.Director:getInstance():getRunningScene() then
 		cc.Director:getInstance():replaceScene(sceneGame)
 	else

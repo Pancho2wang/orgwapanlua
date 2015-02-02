@@ -7,39 +7,30 @@
 -- @Description         : wapan
 --========================================================================
 
--- local GameScene = wp_class("GameScene", function()
--- 	return cc.Scene:create()
--- end)
-local GameScene = ClassMgr:CreateClass("GameScene", function()
-    return cc.Scene:create()
-end)
+local GameScene = ClassMgr:CreateClass("GameScene", "SceneBase")
 
-function GameScene.create()
-	local scene = GameScene.new()
-	scene:addChild(scene:createLayer())
-	return scene
-end
-
-function GameScene:ctor()
+function GameScene:_Init()
     self.visibleSize = cc.Director:getInstance():getVisibleSize()
     self.origin = cc.Director:getInstance():getVisibleOrigin()
-    local scene_pool = PoolMgr:GetPoolByName("ScenePool")
-    local scene = scene_pool:GetObjById(1)
-    ShowTB(scene_pool)
-    print("================")
-    print(scene)
+    self:addChild(self:createLayer())
+    return 1
+end
+
+function GameScene:_Uninit( ... )
+    return 1
 end
 
 function GameScene:createLayer()
 	local layer = cc.Layer:create()
 	local label = cc.LabelTTF:create("Game Scene.", "Arial", 30)
-	label:setColor(cc.c3b(0,222,222))
+	label:setColor(cc.c3b(222,222,0))
 	label:setPosition(cc.p(self.visibleSize.width/2, self.visibleSize.height/2))
 	layer:addChild(label)
 
     local function menuCallbackOpenPopup()
-        local scene = ClassMgr:GetClassByName("GameScene")
-        local sceneGame = scene.create()
+        local scene_pool = PoolMgr:GetPoolByName("ScenePool")
+        -- local scene = scene_pool:GetObjById(1)
+        local sceneGame = scene_pool:AddCCObject("GameScene", cc.Scene:create())
         cc.Director:getInstance():popScene()
         cc.Director:getInstance():pushScene(sceneGame)
     end
@@ -77,12 +68,3 @@ function GameScene:PlayBGMusic( ... )
     local effectPath = cc.FileUtils:getInstance():fullPathForFilename("effect1.wav")
     cc.SimpleAudioEngine:getInstance():preloadEffect(effectPath)
 end
-
--- return GameScene
--- local function AddGameSceneClass()
---     ClassMgr:Add("GameScene", GameScene)
---     return 1
--- end
-
--- AddInitFunction("AddGameSceneClass", AddGameSceneClass)
--- return GameScene

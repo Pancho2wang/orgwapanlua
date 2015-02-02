@@ -16,3 +16,22 @@ end
 function ScenePool:_Init( ... )
 	return 1
 end
+
+function ScenePool:AddCCObject(obj_class_name, cc_object, ...)
+	local obj, id = self:GetObjByClassName(obj_class_name)
+	if obj then
+		print("Object["..obj_class_name.."] is already add.")
+		self:RemoveObject(id)
+	end
+	id = self:GetNextId()
+	local obj_class = ClassMgr:GetClassByName(obj_class_name)
+	obj = obj_class.extend(cc_object)
+	if obj:Init(id, ...) == 1 then
+		self.obj_pool[id] = obj
+		self:GetObjByClassName(obj_class_name)
+		self:UpdateNextId()
+		return obj, id
+	else
+		print("Add CCObject Error.")
+	end
+end

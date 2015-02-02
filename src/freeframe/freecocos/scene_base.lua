@@ -8,18 +8,14 @@
 --========================================================================
 
 local SceneBase = ClassMgr:CreateClass("SceneBase", "ObjBase")
+-- local SceneBase = ClassMgr:CreateClass("SceneBase", function()
+--     return cc.Scene:create()
+-- end)
 
 function SceneBase:_Uninit( ... )
-	-- body
 	return 1
 end
 
 function SceneBase:_Init( ... )
-	-- body
 	return 1
-end
-
-function SceneBase:PrintTest( ... )
-	-- body
-	print("SceneBase========")
 end

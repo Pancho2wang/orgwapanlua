@@ -7,9 +7,6 @@
 -- @Description			: wapan
 --========================================================================
 
--- if not ObjPool then
--- 	ObjPool = wp_class("ObjPool")
--- end
 local ObjPool = ClassMgr:CreateClass("ObjPool")
 
 function ObjPool:_Uninit()
@@ -44,18 +41,19 @@ function ObjPool:IsValid()
 end
 
 function ObjPool:AddObject(obj_class_name, ...)
-	local id = self:GetNextId()
+	local obj, id = self:GetObjByClassName(obj_class_name)
+	if obj then
+		print("Object["..obj_class_name.."] is already add.")
+		self:RemoveObject(id)
+	end
+	id = self:GetNextId()
 	local obj_class = ClassMgr:GetClassByName(obj_class_name)
-	local obj = obj_class.new()
-	self.obj_pool[id] = obj
-	if obj.ctor then
-		return obj
-	elseif obj:Init(id, obj_class_name, ...) == 1 then		
+	obj = obj_class.new()
+	if obj:Init(id, ...) == 1 then
+		self.obj_pool[id] = obj
 		self:UpdateNextId()
-		-- Event:FireEvent(self.obj_name..".ADD", id, ...)
 		return obj, id
 	else
-		self.obj_pool[id] = nil
 		print("Add Object Error.")
 	end
 end
@@ -64,8 +62,7 @@ function ObjPool:RemoveObject(id, ...)
 	if not id or not self.obj_pool[id] then
 		return 0
 	end
-	-- Event:FireEvent(self.obj_name..".REMOVE", id, ...)
-	self.obj_pool[id]:Uninit()
+	self.obj_pool[id]:Uninit(...)
 	self.obj_pool[id] = nil
 	if self.is_recycle == 1 then
 		self.recycle_id_list[#self.recycle_id_list + 1] = id
@@ -108,16 +105,13 @@ end
 
 function ObjPool:GetObjByClassName(obj_class_name)
 	if self.obj_pool then
-		for _, obj in ipairs(self.obj_pool) do
-			if obj.ctor then
-				print("The object no inherit a class.")
-				return
-			end
-			if obj.class_name == obj_class_name then
-				return obj
+		for id, obj in pairs(self.obj_pool) do
+			if obj:GetClassName() == obj_class_name then
+				return obj, id
 			end
 		end
 	end
+	return
 end
 
 function ObjPool:ResetId()
@@ -135,7 +129,7 @@ end
 
 function ObjPool:ForEach(callback, ...)
 	if self.obj_pool then
-		for id, obj in ipairs(self.obj_pool) do
+		for id, obj in pairs(self.obj_pool) do
 			local ret = callback(id, obj, ...)
 			if ret == 0 then
 				return
