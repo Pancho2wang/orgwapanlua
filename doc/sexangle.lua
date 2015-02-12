@@ -116,6 +116,60 @@ local function IsLegalPosition(x, y)
 	return 1
 end
 
+local function find_once(x, y)
+	chessclone[x][y] = '#'
+	--left
+    if 1 == IsLegalPosition(x-1,y) then
+        if touch.x == x-1 and touch.y == y then
+            chessclone[x-1][y] = '#'  
+            return 1 
+        end
+    end
+
+    --upleft
+    if 1 == IsLegalPosition(x,y+1) then
+	    if touch.x == x and touch.y == y+1 then
+	        chessclone[x][y+1] = '#'  
+	        return 1 
+	    end
+	end
+
+   	--upright
+   	if 1 == IsLegalPosition(x+1,y+1) then
+    	if touch.x == x+1 and touch.y == y+1 then
+    		chessclone[x+1][y+1] = '#'
+    		return 1
+    	end
+    end
+
+    --right
+    if 1 == IsLegalPosition(x+1,y) then
+	    if touch.x == x+1 and touch.y == y then
+	        chessclone[x+1][y] = '#'  
+	        return 1 
+	    end
+	end
+
+    --downright
+    if 1 == IsLegalPosition(x,y-1) then
+	    if touch.x == x and touch.y == y-1 then
+	        chessclone[x][y-1] = '#'  
+	        return 1 
+	    end
+	end
+
+    --downleft
+    if 1 == IsLegalPosition(x-1,y-1) then
+    	if touch.x == x-1 and touch.y == y-1 then
+    		chessclone[x-1][y-1] = '#'
+    		return 1
+    	end
+    end
+
+	chessclone[x][y] = 0
+	return 0
+end
+
 local function find_way(x, y)
 	print("=====", x, y)
 	if 1 == IsLegalPosition(x,y) then
@@ -334,7 +388,7 @@ end
 
 local function show_way(x, y)
 	print("begin===", x, y)
-	if 1 == find_way(x, y) then
+	if 1 == find_once(x, y) or 1 == find_way(x, y) then
 		print("success!!!!!!")
 		showTb(chessclone)
 		chessclone = clone(chessboard)
