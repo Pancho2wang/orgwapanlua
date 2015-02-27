@@ -12,7 +12,7 @@ DEBUG = 1
 
 -- display FPS stats on screen
 DEBUG_FPS = 1.0 / 60
-DEBUG_FPS_SHOW = true
+DEBUG_FPS_SHOW = false
 
 -- dump memory info every 10 seconds
 -- DEBUG_MEM = false
@@ -24,11 +24,16 @@ DEBUG_FPS_SHOW = true
 -- LOAD_SHORTCODES_API = true
 
 -- screen orientation
-CONFIG_SCREEN_ORIENTATION = "landscape"
+-- CONFIG_SCREEN_ORIENTATION = "landscape"
+CONFIG_SCREEN_ORIENTATION = "portrait"
 
 -- design resolution
-CONFIG_SCREEN_WIDTH  = 480
-CONFIG_SCREEN_HEIGHT = 320
+CONFIG_SCREEN_WIDTH  = 320
+CONFIG_SCREEN_HEIGHT = 568
+-- CONFIG_SCREEN_WIDTH  = 640
+-- CONFIG_SCREEN_HEIGHT = 1136
+
+CONFIG_SCREEN_SCALE = 0.5
 
 -- auto scale mode
 CONFIG_SCREEN_AUTOSCALE = "FIXED_WIDTH"

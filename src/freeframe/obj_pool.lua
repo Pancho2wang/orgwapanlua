@@ -106,6 +106,7 @@ end
 function ObjPool:GetObjByClassName(obj_class_name)
 	if self.obj_pool then
 		for id, obj in pairs(self.obj_pool) do
+			print("------------",obj.__cname)
 			if obj:GetClassName() == obj_class_name then
 				return obj, id
 			end

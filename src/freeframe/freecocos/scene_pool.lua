@@ -28,7 +28,8 @@ function ScenePool:AddCCObject(obj_class_name, cc_object, ...)
 	obj = obj_class.extend(cc_object)
 	if obj:Init(id, ...) == 1 then
 		self.obj_pool[id] = obj
-		self:GetObjByClassName(obj_class_name)
+		-- self:GetObjByClassName(obj_class_name)
+		print(obj:GetClassName())
 		self:UpdateNextId()
 		return obj, id
 	else

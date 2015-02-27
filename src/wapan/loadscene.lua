@@ -22,7 +22,7 @@ function LoadScene:createLayer()
 	label:setColor(cc.c3b(0,0,255))
 	label:setPosition(cc.p(self.visibleSize.width/2, self.visibleSize.height/2))
 	layer:addChild(label)
-
+    print(self.visibleSize.width, self.visibleSize.height)
 	local function menuCallbackOpenPopup()
 		-- local scene = ClassMgr:GetClassByName("GameScene")
   --   	local sceneGame = scene.create()

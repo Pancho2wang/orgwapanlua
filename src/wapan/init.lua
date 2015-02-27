@@ -10,5 +10,6 @@
 local PROJECT_NAME = string.sub(..., 1, -6)
 
 AddProjectFile(PROJECT_NAME .. ".config")
+AddProjectFile(PROJECT_NAME .. ".sexangle")
 AddProjectFile(PROJECT_NAME .. ".loadscene")
 AddProjectFile(PROJECT_NAME .. ".gamescene")
